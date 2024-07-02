@@ -50,11 +50,13 @@ class Item(db.Model):
         return f"Item {self.nome}"
     
     def compra(self, usuario):
-        self.dono = usuario.id
-        usuario.valor -= self.preco
-        db.session.commit()
+        if usuario.compra_disponivel(self):
+            self.dono = usuario.id
+            usuario.valor -= self.preco
+            db.session.commit()
 
     def venda(self, usuario):
-        self.dono = None
-        usuario.valor += self.preco
-        db.session.commit
+        if usuario.venda_disponivel(self):
+            self.dono = None
+            usuario.valor += self.preco
+            db.session.commit()
